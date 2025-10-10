@@ -14,7 +14,6 @@
   "dependencies": {
     "@atproto/api": "^0.17.2",
     "@atproto/lex-cli": "^0.9.5",
-    "@types/sqlite3": "^5.1.0",
     "cron": "^4.3.3",
     "dotenv": "^17.2.3",
     "multiformats": "^13.4.1",
