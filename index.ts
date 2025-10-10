@@ -1,5 +1,4 @@
 import { Agent, CredentialSession } from "@atproto/api";
-import console from "console";
 import { CronJob } from "cron";
 import * as dotenv from "dotenv";
 import { existsSync, readFileSync, writeFileSync } from "fs";
