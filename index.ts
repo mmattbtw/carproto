@@ -3,7 +3,7 @@ import { CronJob } from "cron";
 import * as dotenv from "dotenv";
 import { existsSync, readFileSync, writeFileSync } from "fs";
 import * as smartcar from "smartcar";
-import type { Record } from "./lexiconTypes/types/net/mmatt/personal/vitals/car";
+import type { Record } from "./lexiconTypes/types/net/mmatt/vitals/car";
 
 // Load environment variables
 dotenv.config();
@@ -185,7 +185,7 @@ async function makeApiRequest(): Promise<void> {
     // Create car data record if we have both fuel and odometer data
     if (fuelLevel && odometer) {
       const data: Record = {
-        $type: "net.mmatt.personal.vitals.car",
+        $type: "net.mmatt.vitals.car",
         createdAt: new Date().toISOString(),
         carFuelRange: fuelLevel.range || 0,
         carPercentFuelRemaining: (fuelLevel.percentRemaining || 0) * 100,
@@ -194,7 +194,7 @@ async function makeApiRequest(): Promise<void> {
       };
 
       await agent.com.atproto.repo.createRecord({
-        collection: "net.mmatt.personal.vitals.car",
+        collection: "net.mmatt.vitals.car",
         record: data,
         repo: process.env.BSKY_DID!,
       });

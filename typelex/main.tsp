@@ -1,6 +1,6 @@
 import "@typelex/emitter";
 
-namespace net.mmatt.personal.vitals.car {
+namespace net.mmatt.vitals.car {
   @rec("tid")
   model Main {
     /** The unix timestamp of when the vital was recorded */

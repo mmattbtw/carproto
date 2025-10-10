@@ -10,9 +10,9 @@ import {
 import { type $Typed, is$typed, maybe$typed } from './util.js'
 
 export const schemaDict = {
-  NetMmattPersonalVitalsCar: {
+  NetMmattVitalsCar: {
     lexicon: 1,
-    id: 'net.mmatt.personal.vitals.car',
+    id: 'net.mmatt.vitals.car',
     defs: {
       main: {
         type: 'record',
@@ -86,5 +86,5 @@ export function validate(
 }
 
 export const ids = {
-  NetMmattPersonalVitalsCar: 'net.mmatt.personal.vitals.car',
+  NetMmattVitalsCar: 'net.mmatt.vitals.car',
 } as const

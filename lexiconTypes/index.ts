@@ -37,25 +37,15 @@ export class NetNS {
 
 export class NetMmattNS {
   _server: Server
-  personal: NetMmattPersonalNS
+  vitals: NetMmattVitalsNS
 
   constructor(server: Server) {
     this._server = server
-    this.personal = new NetMmattPersonalNS(server)
+    this.vitals = new NetMmattVitalsNS(server)
   }
 }
 
-export class NetMmattPersonalNS {
-  _server: Server
-  vitals: NetMmattPersonalVitalsNS
-
-  constructor(server: Server) {
-    this._server = server
-    this.vitals = new NetMmattPersonalVitalsNS(server)
-  }
-}
-
-export class NetMmattPersonalVitalsNS {
+export class NetMmattVitalsNS {
   _server: Server
 
   constructor(server: Server) {

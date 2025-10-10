@@ -3,19 +3,19 @@
  */
 import { type ValidationResult, BlobRef } from '@atproto/lexicon'
 import { CID } from 'multiformats/cid'
-import { validate as _validate } from '../../../../../lexicons'
+import { validate as _validate } from '../../../../lexicons'
 import {
   type $Typed,
   is$typed as _is$typed,
   type OmitKey,
-} from '../../../../../util'
+} from '../../../../util'
 
 const is$typed = _is$typed,
   validate = _validate
-const id = 'net.mmatt.personal.vitals.car'
+const id = 'net.mmatt.vitals.car'
 
 export interface Record {
-  $type: 'net.mmatt.personal.vitals.car'
+  $type: 'net.mmatt.vitals.car'
   /** The unix timestamp of when the vital was recorded */
   createdAt: string
   /** The car fuel range value in miles */
