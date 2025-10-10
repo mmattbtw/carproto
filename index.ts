@@ -156,7 +156,6 @@ async function makeApiRequest(): Promise<void> {
     });
 
     const vehicleAttributes = await vehicle.attributes();
-    console.log(vehicleAttributes);
 
     // Get additional vehicle data
     let odometer: any = null;
@@ -191,8 +190,8 @@ async function makeApiRequest(): Promise<void> {
         $type: "net.mmatt.vitals.car",
         createdAt: new Date().toISOString(),
         carFuelRange: fuelLevel.range || 0,
-        carPercentFuelRemaining: (fuelLevel.percentRemaining || 0) * 100,
-        amountRemaining: fuelLevel.amountRemaining || 0,
+        carPercentFuelRemaining: `${(fuelLevel.percentRemaining || 0) * 100}`,
+        amountRemaining: `${fuelLevel.amountRemaining || 0}`,
         carTraveledDistance: odometer.distance || 0,
         carMake: vehicleAttributes.make,
         carModel: vehicleAttributes.model,
