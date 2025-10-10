@@ -155,6 +155,9 @@ async function makeApiRequest(): Promise<void> {
       unitSystem: "imperial", // Use imperial units for better readability
     });
 
+    const vehicleAttributes = await vehicle.attributes();
+    console.log(vehicleAttributes);
+
     // Get additional vehicle data
     let odometer: any = null;
     let fuelLevel: any = null;
@@ -191,6 +194,9 @@ async function makeApiRequest(): Promise<void> {
         carPercentFuelRemaining: (fuelLevel.percentRemaining || 0) * 100,
         amountRemaining: fuelLevel.amountRemaining || 0,
         carTraveledDistance: odometer.distance || 0,
+        carMake: vehicleAttributes.make,
+        carModel: vehicleAttributes.model,
+        carYear: vehicleAttributes.year,
       };
 
       await agent.com.atproto.repo.createRecord({
