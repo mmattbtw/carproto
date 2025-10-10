@@ -1,0 +1,27 @@
+{
+  "name": "carproto",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "devDependencies": {
+    "@typelex/emitter": "^0.2.0",
+    "@types/bun": "latest",
+    "@typespec/compiler": "^1.5.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@atproto/api": "^0.17.2",
+    "@atproto/lex-cli": "^0.9.5",
+    "@types/sqlite3": "^5.1.0",
+    "cron": "^4.3.3",
+    "dotenv": "^17.2.3",
+    "multiformats": "^13.4.1",
+    "smartcar": "^10.1.0"
+  },
+  "scripts": {
+    "build:lexicons": "tsp compile typelex/main.tsp",
+    "build:types": "./lexicon-type.sh"
+  }
+}

@@ -1,0 +1,22 @@
+import "@typelex/emitter";
+
+namespace net.mmatt.personal.vitals.car {
+  @rec("tid")
+  model Main {
+    /** The unix timestamp of when the vital was recorded */
+    @required
+    createdAt: datetime;
+    /** The car fuel range value in miles */
+    @required
+    carFuelRange: integer;
+    /** The car fuel level value in percentage */
+    @required
+    carPercentFuelRemaining: integer;
+    /** The car fuel amount remaining value */
+    @required
+    amountRemaining: integer;
+    /** The car traveled distance value */
+    @required
+    carTraveledDistance: integer;
+  }
+}
