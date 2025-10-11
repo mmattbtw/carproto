@@ -129,6 +129,38 @@ async function ensureValidToken(): Promise<string> {
   return accessToken!;
 }
 
+// Refresh token when API calls fail with authentication errors
+async function refreshTokenIfNeeded(): Promise<void> {
+  if (!refreshToken) {
+    const savedTokens = loadTokens();
+    if (savedTokens) {
+      refreshToken = savedTokens.refreshToken;
+    }
+  }
+
+  if (!refreshToken) {
+    throw new Error("No refresh token available. Please re-authenticate.");
+  }
+
+  console.log("🔄 Token expired, refreshing access token...");
+  try {
+    const tokens = await client.exchangeRefreshToken(refreshToken);
+    accessToken = tokens.accessToken;
+    refreshToken = tokens.refreshToken;
+
+    // Save new tokens to database
+    saveTokens(accessToken!, refreshToken!);
+    console.log("✅ Access token refreshed and saved");
+  } catch (error) {
+    console.error("❌ Failed to refresh token:", error);
+    // Clear invalid tokens
+    clearTokens();
+    accessToken = null;
+    refreshToken = null;
+    throw new Error("Token refresh failed. Please re-authenticate.");
+  }
+}
+
 // Main API function - now uses Smartcar SDK
 async function makeApiRequest(): Promise<void> {
   try {
@@ -151,11 +183,37 @@ async function makeApiRequest(): Promise<void> {
     const token = await ensureValidToken();
 
     // Create vehicle instance using the SDK
-    const vehicle = new smartcar.Vehicle(VEHICLE_ID, token, {
+    let vehicle = new smartcar.Vehicle(VEHICLE_ID, token, {
       unitSystem: "imperial", // Use imperial units for better readability
     });
 
-    const vehicleAttributes = await vehicle.attributes();
+    let vehicleAttributes: any;
+    let retryCount = 0;
+    const maxRetries = 1;
+
+    // Try to get vehicle attributes with token refresh on auth failure
+    while (retryCount <= maxRetries) {
+      try {
+        vehicleAttributes = await vehicle.attributes();
+        break; // Success, exit retry loop
+      } catch (error: any) {
+        if (
+          error.message &&
+          error.message.includes("AUTHENTICATION") &&
+          retryCount < maxRetries
+        ) {
+          console.log("🔄 Authentication error detected, refreshing token...");
+          await refreshTokenIfNeeded();
+          const newToken = await ensureValidToken();
+          vehicle = new smartcar.Vehicle(VEHICLE_ID, newToken, {
+            unitSystem: "imperial",
+          });
+          retryCount++;
+        } else {
+          throw error; // Re-throw if not auth error or max retries reached
+        }
+      }
+    }
 
     // Get additional vehicle data
     let odometer: any = null;
@@ -212,11 +270,18 @@ async function makeApiRequest(): Promise<void> {
     console.error("❌ Smartcar API request failed:", error);
 
     // If it's an auth error, provide helpful guidance
-    if (error instanceof Error && error.message.includes("401")) {
+    if (
+      error instanceof Error &&
+      (error.message.includes("AUTHENTICATION") ||
+        error.message.includes("401"))
+    ) {
       console.log("\n🔐 Authentication Error - You may need to:");
       console.log("   1. Set up your environment variables (.env file)");
       console.log("   2. Run the OAuth flow to get initial tokens");
       console.log("   3. Check if your tokens have expired");
+      console.log(
+        "   4. Clear tokens and re-authenticate: bun run index.ts --clear-tokens"
+      );
     }
   }
 }
